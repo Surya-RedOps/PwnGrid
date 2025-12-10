@@ -11,9 +11,9 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return <div className="loading-container">Loading...</div>;
   }
 
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to register
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/register" />;
   }
 
   // If admin-only route and user is not admin, redirect to home

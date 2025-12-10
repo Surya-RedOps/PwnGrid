@@ -183,7 +183,7 @@ function Navbar() {
               </div>
             ) : (
               <div className="auth-buttons">
-                <Link to="/login" className="login-button">Login</Link>
+                <Link to="/register" className="login-button">Register</Link>
               </div>
             )}
           </div>
