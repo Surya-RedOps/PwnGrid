@@ -234,18 +234,29 @@
   font-size: 0.9rem;
   font-weight: 500;
   text-transform: uppercase;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.role-badge.superadmin {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+  color: #ffd700;
+  border: 1.5px solid #ffd700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+  font-weight: 600;
 }
 
 .role-badge.admin {
-  background: rgba(255, 0, 0, 0.1);
-  color: #ff4444;
-  border: 1px solid rgba(255, 0, 0, 0.3);
+  background: rgba(255, 68, 68, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 68, 68, 0.4);
+  box-shadow: 0 0 6px rgba(255, 68, 68, 0.2);
 }
 
 .role-badge.user {
-  background: rgba(0, 255, 170, 0.1);
+  background: rgba(0, 255, 170, 0.12);
   color: #00ffaa;
-  border: 1px solid rgba(0, 255, 170, 0.3);
+  border: 1px solid rgba(0, 255, 170, 0.35);
 }
 
 .action-buttons {
