@@ -19,6 +19,7 @@ import Challenges from './pages/Challenges'
 
 import About from './pages/About'
 import Login from './pages/Login'
+import Register from './pages/Register'
 import Profile from './pages/Profile'
 import Leaderboard from './pages/Leaderboard'
 import CreateChallenge from './pages/CreateChallenge'
@@ -66,6 +67,7 @@ function App() {
 
               <Route path="/about" element={<About />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
               <Route path="/contact" element={<ContactUs />} />
               <Route path="/notices" element={<Notice />} />
               <Route path="/profile" element={

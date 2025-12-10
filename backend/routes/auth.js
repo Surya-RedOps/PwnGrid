@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { protect, authorize } = require('../middleware/auth');
 const { loginLimiter, generalLimiter, sanitizeInput, validateInput, securityHeaders } = require('../middleware/security');
+const { sendOTPEmail } = require('../utils/email');
 
 // Real-time logging function
 const logActivity = (action, details = {}) => {
@@ -20,9 +21,229 @@ const generateToken = (id) => {
 };
 
 // @route   POST /api/auth/register
+// @desc    Public user registration - sends OTP to email
+// @access  Public
+router.post('/register', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    // Validate input
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide all required fields'
+      });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address'
+      });
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters'
+      });
+    }
+
+    // Check if user already exists
+    const userExists = await User.findOne({
+      $or: [{ email }, { username }]
+    });
+
+    if (userExists) {
+      return res.status(400).json({
+        success: false,
+        message: userExists.email === email ?
+          'Email already registered' :
+          'Username already taken'
+      });
+    }
+
+    // Create unverified user
+    const user = await User.create({
+      username,
+      email: email.toLowerCase(),
+      password,
+      role: 'user',
+      isEmailVerified: false
+    });
+
+    // Generate OTP
+    const otp = user.generateOTP();
+    await user.save();
+
+    // Send OTP email
+    try {
+      await sendOTPEmail(user.email, otp);
+    } catch (emailError) {
+      console.error('Failed to send OTP email:', emailError);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email. Please try again.'
+      });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: 'Registration successful. Please check your email for OTP verification.',
+      email: user.email,
+      userId: user._id
+    });
+  } catch (error) {
+    console.error('Registration error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ?
+        `Error creating user: ${error.message}` :
+        'Error creating user. Please try again later.'
+    });
+  }
+});
+
+// @route   POST /api/auth/verify-otp
+// @desc    Verify OTP and activate user account
+// @access  Public
+router.post('/verify-otp', async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    // Validate input
+    if (!email || !otp) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email and OTP'
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ email: email.toLowerCase() }).select('+otp');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Check if already verified
+    if (user.isEmailVerified) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already verified'
+      });
+    }
+
+    // Verify OTP
+    if (!user.verifyOTP(otp)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired OTP'
+      });
+    }
+
+    // Mark email as verified and clear OTP
+    user.isEmailVerified = true;
+    user.clearOTP();
+    await user.save();
+
+    // Generate token
+    const token = generateToken(user._id);
+
+    res.json({
+      success: true,
+      message: 'Email verified successfully',
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        points: user.points,
+        isEmailVerified: user.isEmailVerified
+      }
+    });
+  } catch (error) {
+    console.error('OTP verification error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ?
+        `Error verifying OTP: ${error.message}` :
+        'Error verifying OTP. Please try again later.'
+    });
+  }
+});
+
+// @route   POST /api/auth/resend-otp
+// @desc    Resend OTP to email
+// @access  Public
+router.post('/resend-otp', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide email'
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    if (user.isEmailVerified) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email already verified'
+      });
+    }
+
+    // Generate new OTP
+    const otp = user.generateOTP();
+    await user.save();
+
+    // Send OTP email
+    try {
+      await sendOTPEmail(user.email, otp);
+    } catch (emailError) {
+      console.error('Failed to send OTP email:', emailError);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send verification email. Please try again.'
+      });
+    }
+
+    res.json({
+      success: true,
+      message: 'OTP resent successfully'
+    });
+  } catch (error) {
+    console.error('Resend OTP error:', error);
+    res.status(500).json({
+      success: false,
+      message: process.env.NODE_ENV === 'development' ?
+        `Error resending OTP: ${error.message}` :
+        'Error resending OTP. Please try again later.'
+    });
+  }
+});
+
+// @route   POST /api/auth/register-admin
 // @desc    Register a user (Admin only)
 // @access  Private/Admin
-router.post('/register', protect, authorize('admin', 'superadmin'), async (req, res) => {
+router.post('/register-admin', protect, authorize('admin', 'superadmin'), async (req, res) => {
   try {
     const { username, email, password, teamId } = req.body;
 

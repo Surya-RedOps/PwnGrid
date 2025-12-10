@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { sanitizeInput, validateEmail, validatePassword, rateLimiter } from '../utils/security';
 import Logger from '../utils/logger';
@@ -122,7 +122,7 @@ function Login() {
 
         <div className="auth-footer">
           <p>
-            Need an account? Contact an administrator for user creation
+            Need an account? <Link to="/register">Register here</Link>
           </p>
         </div>
       </div>
