@@ -66,15 +66,13 @@ router.post('/register', async (req, res) => {
       });
     }
 
-    // Create unverified user (blocked by default until admin approval)
+    // Create unverified user
     const user = await User.create({
       username,
       email: email.toLowerCase(),
       password,
       role: 'user',
-      isEmailVerified: false,
-      isBlocked: true,
-      blockedReason: 'Pending admin approval'
+      isEmailVerified: false
     });
 
     // Generate OTP
@@ -94,7 +92,7 @@ router.post('/register', async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Registration successful. Please check your email for OTP verification. Your account is pending admin approval.',
+      message: 'Registration successful. Please check your email for OTP verification.',
       email: user.email,
       userId: user._id
     });
