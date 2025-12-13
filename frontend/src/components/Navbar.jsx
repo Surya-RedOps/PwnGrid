@@ -80,7 +80,7 @@ function Navbar() {
         {/* Logo on the left */}
         <div className="navbar-brand">
           <Link to="/" className="navbar-logo">
-            <span className="logo-text">PWN<span className="logo-highlight">GRID</span></span>
+            <span className="logo-text">CTF<span className="logo-highlight">Quest</span></span>
           </Link>
         </div>
 
@@ -95,7 +95,7 @@ function Navbar() {
               <li><Link to="/leaderboard" className={`nav-link ${isActiveLink('/leaderboard') ? 'active' : ''}`}>Leaderboard</Link></li>
             )}
 
-            <li><Link to="/about" className={`nav-link ${isActiveLink('/about') ? 'active' : ''}`}>About</Link></li>
+            {/* <li><Link to="/about" className={`nav-link ${isActiveLink('/about') ? 'active' : ''}`}>About</Link></li> */}
             <li><Link to="/notices" className={`nav-link ${isActiveLink('/notices') ? 'active' : ''}`}>Notices</Link></li>
             <li><Link to="/documentation" className={`nav-link ${isActiveLink('/documentation') ? 'active' : ''}`}>Docs</Link></li>
           </ul>

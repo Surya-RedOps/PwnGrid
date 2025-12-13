@@ -12,7 +12,7 @@ function Home() {
       <div className="hero-section">
         <div className="hero-content">
           <div className="glitch-container">
-            <h1 className="glitch-text">PWN<span>Grid</span></h1>
+            <h1 className="glitch-text">CTF<span>Quest</span></h1>
           </div>
           <p className="hero-subtitle">A Comprehensive CTF Platform for Cybersecurity Education</p>
           <p className="hero-description">
@@ -26,20 +26,7 @@ function Home() {
             )}
           </div>
         </div>
-        <div className="hero-stats">
-          <div className="stat-item">
-            <span className="stat-number">10K+</span>
-            <span className="stat-label">Target Users</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">50+</span>
-            <span className="stat-label">Annual Events</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-number">10+</span>
-            <span className="stat-label">Universities</span>
-          </div>
-        </div>
+
       </div>
 
       {/* CTF Styles Section */}
@@ -78,7 +65,7 @@ function Home() {
         <div className="learning-content">
           <h2 className="section-title">Platform Features</h2>
           <p className="section-description">
-            PWN-Grid provides a comprehensive MERN stack-based Platform as a Service (PaaS) designed 
+            CTFQuest provides a comprehensive MERN stack-based Platform as a Service (PaaS) designed 
             specifically for cybersecurity education and competitive events.
           </p>
           <div className="path-cards">
@@ -100,7 +87,7 @@ function Home() {
                 <li>Grade export & analytics</li>
                 <li>Event management</li>
               </ul>
-              <Link to="/about" className="path-button">Learn More</Link>
+              {/* <Link to="/about" className="path-button">Learn More</Link> */}
             </div>
             <div className="path-card">
               <h3>For Organizations</h3>
@@ -118,7 +105,7 @@ function Home() {
 
       {/* Community Section */}
       <div className="community-section">
-        <h2 className="section-title">Why Choose PWN-Grid?</h2>
+        <h2 className="section-title">Why Choose CTFQuest?</h2>
         <p className="section-description">
           The only platform that combines all three CTF styles with deep academic integration 
           and community-oriented features for comprehensive cybersecurity education.

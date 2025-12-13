@@ -73,7 +73,7 @@ function Login() {
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
-          <h2>Login to <span className="highlight">pwngrid Horizon</span></h2>
+          <h2>Login to <span className="highlight">CTFQuest</span></h2>
           <p>Access your account and start solving challenges</p>
         </div>
 

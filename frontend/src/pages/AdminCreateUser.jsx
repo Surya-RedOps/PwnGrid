@@ -84,7 +84,7 @@ function AdminCreateUser() {
       };
 
       const res = await axios.post(
-        '/api/auth/register',
+        '/api/auth/register-admin',
         {
           username: formData.username,
           email: formData.email,

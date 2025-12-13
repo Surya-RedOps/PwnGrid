@@ -39,7 +39,7 @@ const Footer = () => {
         <div className="footer-main">
           <div className="footer-brand">
             <Link to="/" className="footer-logo">
-              <span className="logo-text">PWN<span className="logo-highlight">GRID</span></span>
+              <span className="logo-text">CTF<span className="logo-highlight">Quest</span></span>
             </Link>
             <p className="footer-description">
               Empowering the next generation of cybersecurity professionals through hands-on challenges and competitions.
@@ -71,7 +71,7 @@ const Footer = () => {
 
             <div className="footer-nav-column">
               <h3>Company</h3>
-              <Link to="/about" className="footer-link">About Us</Link>
+              {/* <Link to="/about" className="footer-link">About Us</Link> */}
               <Link to="/privacy-policy" className="footer-link">Privacy Policy</Link>
               <Link to="/terms-of-service" className="footer-link">Terms of Service</Link>
               <Link to="/contact" className="footer-link">Contact Us</Link>
@@ -136,14 +136,14 @@ const Footer = () => {
 
       <div className="footer-bottom">
         <div className="footer-bottom-content">
-          <p>&copy; {new Date().getFullYear()} PWNGrid. All Rights Reserved.</p>
+          <p>&copy; {new Date().getFullYear()} CTFQuest. All Rights Reserved.</p>
           {/* <div className="footer-links">
             <Link to="/privacy-policy" className="footer-bottom-link">Privacy Policy</Link>
             <Link to="/terms-of-service" className="footer-bottom-link">Terms of Service</Link>
             <Link to="/contact" className="footer-bottom-link">Contact</Link>
           </div> */}
         </div>
-        <p className="footer-disclaimer">pwngrid is designed for educational purposes only. Always practice ethical hacking.</p>
+        <p className="footer-disclaimer">CTFQuest is designed for educational purposes only. Always practice ethical hacking.</p>
       </div>
     </footer>
   );

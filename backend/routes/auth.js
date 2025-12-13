@@ -21,90 +21,15 @@ const generateToken = (id) => {
 };
 
 // @route   POST /api/auth/register
-// @desc    Public user registration - sends OTP to email
+// @desc    Public registration disabled - Admin only
 // @access  Public
 router.post('/register', async (req, res) => {
-  try {
-    const { username, email, password } = req.body;
-
-    // Validate input
-    if (!username || !email || !password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide all required fields'
-      });
-    }
-
-    // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please provide a valid email address'
-      });
-    }
-
-    // Validate password length
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password must be at least 6 characters'
-      });
-    }
-
-    // Check if user already exists
-    const userExists = await User.findOne({
-      $or: [{ email }, { username }]
-    });
-
-    if (userExists) {
-      return res.status(400).json({
-        success: false,
-        message: userExists.email === email ?
-          'Email already registered' :
-          'Username already taken'
-      });
-    }
-
-    // Create unverified user
-    const user = await User.create({
-      username,
-      email: email.toLowerCase(),
-      password,
-      role: 'user',
-      isEmailVerified: false
-    });
-
-    // Generate OTP
-    const otp = user.generateOTP();
-    await user.save();
-
-    // Send OTP email
-    try {
-      await sendOTPEmail(user.email, otp);
-    } catch (emailError) {
-      console.error('Failed to send OTP email:', emailError);
-      return res.status(500).json({
-        success: false,
-        message: 'Failed to send verification email. Please try again.'
-      });
-    }
-
-    res.status(201).json({
-      success: true,
-      message: 'Registration successful. Please check your email for OTP verification.',
-      email: user.email,
-      userId: user._id
-    });
-  } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({
-      success: false,
-      message: process.env.NODE_ENV === 'development' ?
-        `Error creating user: ${error.message}` :
-        'Error creating user. Please try again later.'
-    });
-  }
+  return res.status(403).json({
+    success: false,
+    message: 'Public registration is currently disabled. Please contact the administrator for account creation.',
+    adminContact: 'ctfquest@gmail.com',
+    registrationDisabled: true
+  });
 });
 
 // @route   POST /api/auth/verify-otp
