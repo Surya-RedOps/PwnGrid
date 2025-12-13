@@ -33,7 +33,10 @@ const PORT = process.env.PORT || 5000;
 // Basic CORS setup before security middleware
 app.use(cors({
   origin: process.env.CORS_ORIGIN === '*' ? true : (process.env.CORS_ORIGIN || 'http://localhost:5173'),
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }));
 
 // Performance middleware for 500+ concurrent users
