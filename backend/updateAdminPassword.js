@@ -19,43 +19,36 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-async function createAdmin() {
+async function updateAdminPassword() {
   try {
     // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || process.env.MONGO_URI);
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('Connected to MongoDB');
 
-    // Check if admin already exists
-    const existingAdmin = await User.findOne({ email: 'admin@ctfquest.com' });
-    if (existingAdmin) {
-      console.log('Admin user already exists');
-      process.exit(0);
+    // Find admin user
+    const admin = await User.findOne({ email: 'admin@ctfquest.com' });
+    if (!admin) {
+      console.log('Admin user not found');
+      process.exit(1);
     }
 
-    // Hash password
+    // Hash new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash('Ctf#Quest@Admin$123', salt);
 
-    // Create admin user
-    const admin = new User({
-      username: 'admin',
-      email: 'admin@ctfquest.com',
-      password: hashedPassword,
-      role: 'admin',
-      points: 0,
-      isVerified: true
-    });
-
+    // Update admin password
+    admin.password = hashedPassword;
     await admin.save();
-    console.log('Admin user created successfully');
+
+    console.log('Admin password updated successfully');
     console.log('Email: admin@ctfquest.com');
-    console.log('Password: Ctf#Quest@Admin$123');
+    console.log('New Password: Ctf#Quest@Admin$123');
     
     process.exit(0);
   } catch (error) {
-    console.error('Error creating admin user:', error);
+    console.error('Error updating admin password:', error);
     process.exit(1);
   }
 }
 
-createAdmin();
+updateAdminPassword();
